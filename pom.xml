@@ -11,12 +11,13 @@
 	<groupId>com.ganaway</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging> jar </packaging>
 	<name>backend</name>
 	<description>Backend for dimensional dungeon</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	<packaging>war</packaging>
+<!--	<packaging>war</packaging>-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
