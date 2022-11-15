@@ -73,6 +73,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         }
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "Authentication Failed");
+        log.info("response : {}", response);
+
 
     }
 }
