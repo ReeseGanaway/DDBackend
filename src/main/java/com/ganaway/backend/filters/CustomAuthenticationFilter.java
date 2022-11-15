@@ -71,6 +71,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         if(failed != null){
             log.info("failed cause : {}", failed.getMessage());
         }
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                "Authentication Failed");
 
     }
 }
