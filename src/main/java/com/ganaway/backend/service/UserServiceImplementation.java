@@ -6,6 +6,7 @@ import com.ganaway.backend.repository.UserRepository;
 import com.ganaway.backend.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +14,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImplementation implements UserService, UserDetailsService {
@@ -35,6 +38,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public User signup(User user) {
         log.info("Saving new user {} to the database", user.getUsername());
+        User usernameTaken = userRepository.findByUsername(user.getUsername());
+        Optional<User> emailTaken = userRepository.findByEmail(user.getEmail());
+        if(emailTaken.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!");
+        }
+        if(usernameTaken != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserRole userRole = userRoleRepository.findByName("USER");
         user.getUserRoles().add(userRole);
