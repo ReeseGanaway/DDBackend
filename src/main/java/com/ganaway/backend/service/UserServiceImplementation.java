@@ -26,12 +26,20 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final PasswordEncoder passwordEncoder;
 
     @Override
-
     public User saveUser(User user) {
         log.info("Saving new user {} to the database", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
+    @Override
+    public User signup(User user) {
+        log.info("Saving new user {} to the database", user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+
 
     @Override
     public UserRole saveRole(UserRole role) {
