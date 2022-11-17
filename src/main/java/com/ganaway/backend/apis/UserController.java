@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +40,16 @@ public class UserController{
     @GetMapping("/get-all-users")
     public ResponseEntity<List<User>>getUsers(){
         return ResponseEntity.ok().body(userService.getUsers());
+    }
+
+    @GetMapping("/get-${username}")
+    public ResponseEntity<User>getUser(@PathVariable("username") @RequestBody String username){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if(userDetails.getUsername() == username){
+        return ResponseEntity.ok().body(userService.getUser(username));}else{
+            throw new RuntimeException("Not allowed");
+        }
     }
 
     @PostMapping("/user/save")
