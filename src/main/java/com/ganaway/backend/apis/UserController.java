@@ -46,8 +46,9 @@ public class UserController{
     public ResponseEntity<User>getUser(@RequestBody String username){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
+        log.info("currentUser : {}", userDetails.getUsername() );
         String currentUser = userDetails.getUsername();
-        log.info(currentUser);
+
         if(currentUser.equals(username)){
         return ResponseEntity.ok().body(userService.getUser(username));}
         else{
