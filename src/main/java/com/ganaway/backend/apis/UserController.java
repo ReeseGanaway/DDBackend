@@ -66,8 +66,8 @@ public class UserController{
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(access_token);
                 String remoteUser = decodedJWT.getSubject();
-                log.info("remote user : {} , username : {} ",remoteUser, username);
-                if(remoteUser.equals(username.getUsername())){
+                List roles = Arrays.asList(decodedJWT.getClaim("roles").asArray(String.class));
+                if(remoteUser.equals(username.getUsername()) || roles.contains("ADMIN") || roles.contains("SUPER_ADMIN")){
                 User user = userService.getUser(username.getUsername());
                 Map<String, String> userInfo = new HashMap<>();
                 userInfo.put("username", user.getUsername());
