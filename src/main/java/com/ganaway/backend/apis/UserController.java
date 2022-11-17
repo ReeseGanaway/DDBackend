@@ -43,17 +43,49 @@ public class UserController{
     }
 
     @GetMapping("/get-user")
-    public ResponseEntity<User>getUser(@RequestBody String username){
-      User userDetails = (User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        log.info("currentUser : {}", username );
-        String currentUser = userDetails.getUsername();
-
-        if(currentUser.equals(username)){
-        return ResponseEntity.ok().body(userService.getUser(username));
-    }
-        else{
-            throw new RuntimeException("Not allowed");
+//    public ResponseEntity<User>getUser(@RequestBody String username){
+//      User userDetails = (User) SecurityContextHolder.getContext().getAuthentication()
+//                .getPrincipal();
+//        log.info("currentUser : {}", username );
+//        String currentUser = userDetails.getUsername();
+//
+//        if(currentUser.equals(username)){
+//        return ResponseEntity.ok().body(userService.getUser(username));
+//    }
+//        else{
+//            throw new RuntimeException("Not allowed");
+//        }
+//    }
+    public void getUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String username) throws IOException{
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
+                String access_token = authorizationHeader.substring("Bearer ".length());
+                //        "secret" need to be encrypted later
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(access_token);
+                String remoteUser = decodedJWT.getSubject();
+                if(remoteUser.equals(username)){
+                User user = userService.getUser(username);
+                Map<String, String> userInfo = new HashMap<>();
+                userInfo.put("username", user.getUsername());
+                userInfo.put("email", user.getEmail());
+                userInfo.put("roles", user.getUserRoles().toString());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), userInfo);}
+                else{
+                    throw new RuntimeException("You don't have access to this user's data.");
+                }
+            } catch (Exception exception) {
+                response.setHeader("error", exception.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                //response.sendError(FORBIDDEN.value());
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message", exception.getMessage());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            }
         }
     }
 
