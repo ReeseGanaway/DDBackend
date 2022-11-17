@@ -42,7 +42,7 @@ public class UserController{
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @GetMapping("/user-info")
+    @GetMapping("/get-user")
 //    public ResponseEntity<User>getUser(@RequestBody String username){
 //      User userDetails = (User) SecurityContextHolder.getContext().getAuthentication()
 //                .getPrincipal();
