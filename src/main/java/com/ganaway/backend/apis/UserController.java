@@ -46,7 +46,7 @@ public class UserController{
     public ResponseEntity<User>getUser(@RequestBody String username){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        if(userDetails.getUsername() == username){
+        if(userDetails.getUsername().equals(username)){
         return ResponseEntity.ok().body(userService.getUser(username));}else{
             throw new RuntimeException("Not allowed");
         }
