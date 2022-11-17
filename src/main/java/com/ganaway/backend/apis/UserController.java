@@ -42,7 +42,7 @@ public class UserController{
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-    @GetMapping("/get-user")
+    @GetMapping("/user-info")
 //    public ResponseEntity<User>getUser(@RequestBody String username){
 //      User userDetails = (User) SecurityContextHolder.getContext().getAuthentication()
 //                .getPrincipal();
@@ -56,7 +56,7 @@ public class UserController{
 //            throw new RuntimeException("Not allowed");
 //        }
 //    }
-    public void getUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String username) throws IOException{
+    public void getUser(HttpServletRequest request, HttpServletResponse response, @RequestParam String username) throws IOException{
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
