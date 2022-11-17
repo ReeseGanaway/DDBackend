@@ -56,7 +56,7 @@ public class UserController{
 //            throw new RuntimeException("Not allowed");
 //        }
 //    }
-    public void getUser(HttpServletRequest request, HttpServletResponse response, @RequestParam String username) throws IOException{
+    public void getUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User username) throws IOException{
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
@@ -67,8 +67,8 @@ public class UserController{
                 DecodedJWT decodedJWT = verifier.verify(access_token);
                 String remoteUser = decodedJWT.getSubject();
                 log.info("remote user : {} , username : {} ",remoteUser, username);
-                if(remoteUser.equals(username)){
-                User user = userService.getUser(username);
+                if(remoteUser.equals(username.getUsername())){
+                User user = userService.getUser(username.getUsername());
                 Map<String, String> userInfo = new HashMap<>();
                 userInfo.put("username", user.getUsername());
                 userInfo.put("email", user.getEmail());
