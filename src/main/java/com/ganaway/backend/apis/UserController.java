@@ -44,16 +44,17 @@ public class UserController{
 
     @PostMapping("/get-user")
     public ResponseEntity<User>getUser(@RequestBody String username){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        log.info("currentUser : {}", userDetails.getUsername() );
-        String currentUser = userDetails.getUsername();
+//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+//                .getPrincipal();
+        log.info("currentUser : {}", username );
+        //String currentUser = userDetails.getUsername();
 
-        if(currentUser.equals(username)){
-        return ResponseEntity.ok().body(userService.getUser(username));}
-        else{
-            throw new RuntimeException("Not allowed");
-        }
+        //if(currentUser.equals(username)){
+        return ResponseEntity.ok().body(userService.getUser(username));
+    //}
+//        else{
+//            throw new RuntimeException("Not allowed");
+//        }
     }
 
     @PostMapping("/user/save")
