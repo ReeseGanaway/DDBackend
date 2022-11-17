@@ -66,7 +66,7 @@ public class UserController{
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(access_token);
                 String remoteUser = decodedJWT.getSubject();
-                log.info(remoteUser, username);
+                log.info("remote user : {} , username : {} ",remoteUser, username);
                 if(remoteUser.equals(username)){
                 User user = userService.getUser(username);
                 Map<String, String> userInfo = new HashMap<>();
